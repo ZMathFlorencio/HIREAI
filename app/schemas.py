@@ -21,7 +21,8 @@ class VagaUpdate(BaseModel):
 # Schema para resposta da vaga
 class Vaga(VagaBase):
     id: int
+    slug: str               # <-- Adicionamos aqui
     criado_em: datetime
 
     class Config:
-        orm_mode = True 
+        orm_mode = True

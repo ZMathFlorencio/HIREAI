@@ -1,3 +1,13 @@
+import random
+import string
+from unidecode import unidecode
+
+def gerar_slug(nome: str):
+    """Gera um slug legível e único a partir do nome da vaga"""
+    nome_normalizado = unidecode(nome.lower().replace(" ", "-"))
+    sufixo = ''.join(random.choices(string.digits, k=4))
+    return f"{nome_normalizado}-{sufixo}"
+
 from sqlalchemy.orm import Session
 from . import models, schemas
 
@@ -10,8 +20,9 @@ def get_vagas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Vaga).offset(skip).limit(limit).all()
 
 def create_vaga(db: Session, vaga: schemas.VagaCreate):
-    """Criar nova vaga"""
-    db_vaga = models.Vaga(**vaga.dict())
+    """Criar nova vaga com slug automático"""
+    slug = gerar_slug(vaga.nome)
+    db_vaga = models.Vaga(**vaga.dict(), slug=slug)
     db.add(db_vaga)
     db.commit()
     db.refresh(db_vaga)

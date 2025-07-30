@@ -37,6 +37,15 @@ def read_vagas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     vagas = crud.get_vagas(db, skip=skip, limit=limit)
     return vagas
 
+@app.get("/vagas/publico/{slug}", response_model=schemas.Vaga)
+def read_vaga_publica(slug: str, db: Session = Depends(get_db)):
+    """Buscar uma vaga por SLUG (acesso público)"""
+    vaga = db.query(models.Vaga).filter(models.Vaga.slug == slug).first()
+    if not vaga:
+        raise HTTPException(status_code=404, detail="Vaga não encontrada")
+    return vaga
+
+
 @app.get("/vagas/{vaga_id}", response_model=schemas.Vaga)
 def read_vaga(vaga_id: int, db: Session = Depends(get_db)):
     """Buscar uma vaga específica por ID"""

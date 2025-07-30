@@ -8,5 +8,6 @@ class Vaga(Base):
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String, index=True, nullable=False)
     descricao = Column(String, nullable=False)
+    slug = Column(String, unique=True, index=True, nullable=False)  # <- AQUI
     criado_em = Column(DateTime, server_default=func.now())
-    vaga_disponivel = Column(Boolean, default=True) 
+    vaga_disponivel = Column(Boolean, default=True)
