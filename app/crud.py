@@ -20,9 +20,8 @@ def get_vagas(db: Session, skip: int = 0, limit: int = 100):
     return db.query(models.Vaga).offset(skip).limit(limit).all()
 
 def create_vaga(db: Session, vaga: schemas.VagaCreate):
-    """Criar nova vaga com slug automático"""
-    slug = gerar_slug(vaga.nome)
-    db_vaga = models.Vaga(**vaga.dict(), slug=slug)
+    """Criar nova vaga"""
+    db_vaga = models.Vaga(**vaga.dict())
     db.add(db_vaga)
     db.commit()
     db.refresh(db_vaga)
