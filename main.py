@@ -45,6 +45,15 @@ def read_vaga_publica(slug: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Vaga não encontrada")
     return vaga
 
+@app.get("/teste-conexao")#teste de conexão com o banco de dados
+def teste_conexao(db: Session = Depends(get_db)):
+    try:
+        # Apenas tenta realizar uma operação simples no banco
+        db.execute("SELECT 1")
+        return {"status": "Conexão com o banco funcionando"}
+    except Exception as e:
+        return {"erro": str(e)}
+
 
 @app.get("/vagas/{vaga_id}", response_model=schemas.Vaga)
 def read_vaga(vaga_id: int, db: Session = Depends(get_db)):
