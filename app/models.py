@@ -27,7 +27,7 @@ class Candidato(Base):
     email = Column(String, nullable=False)
     skill = Column(Text, nullable=False)
     video = Column(Text, nullable=False)
-    transcrição = Column(Text, nullable=False)
+    transcricao = Column(Text, nullable=False)
     Perfil = Column(Text, nullable=False)
     video_url = Column(Text, nullable=False)
     vaga_id = Column(Integer, ForeignKey("vagas.id"), nullable=False)

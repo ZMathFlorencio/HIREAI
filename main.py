@@ -79,6 +79,49 @@ def delete_vaga(vaga_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Vaga não encontrada")
     return {"message": "Vaga deletada com sucesso"}
 
+# ===== ROTAS PARA CANDIDATOS =====
+
+@app.post("/candidatos/", response_model=schemas.Candidato, status_code=201)
+def create_candidato(candidato: schemas.CandidatoCreate, db: Session = Depends(get_db)):
+    """Criar um novo candidato"""
+    return crud.create_candidato(db=db, candidato=candidato)
+
+@app.get("/candidatos/", response_model=List[schemas.Candidato])
+def read_candidatos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """Listar todos os candidatos"""
+    candidatos = crud.get_candidatos(db, skip=skip, limit=limit)
+    return candidatos
+
+@app.get("/candidatos/{candidato_id}", response_model=schemas.Candidato)
+def read_candidato(candidato_id: int, db: Session = Depends(get_db)):
+    """Buscar um candidato específico por ID"""
+    db_candidato = crud.get_candidato(db, candidato_id=candidato_id)
+    if db_candidato is None:
+        raise HTTPException(status_code=404, detail="Candidato não encontrado")
+    return db_candidato
+
+@app.put("/candidatos/{candidato_id}", response_model=schemas.Candidato)
+def update_candidato(candidato_id: int, candidato: schemas.CandidatoUpdate, db: Session = Depends(get_db)):
+    """Atualizar um candidato existente"""
+    db_candidato = crud.update_candidato(db, candidato_id=candidato_id, candidato=candidato)
+    if db_candidato is None:
+        raise HTTPException(status_code=404, detail="Candidato não encontrado")
+    return db_candidato
+
+@app.delete("/candidatos/{candidato_id}")
+def delete_candidato(candidato_id: int, db: Session = Depends(get_db)):
+    """Deletar um candidato"""
+    success = crud.delete_candidato(db, candidato_id=candidato_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Candidato não encontrado")
+    return {"message": "Candidato deletado com sucesso"}
+
+@app.get("/vagas/{vaga_id}/candidatos/", response_model=List[schemas.Candidato])
+def read_candidatos_por_vaga(vaga_id: int, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """Listar candidatos de uma vaga específica"""
+    candidatos = crud.get_candidatos_por_vaga(db, vaga_id=vaga_id, skip=skip, limit=limit)
+    return candidatos
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000) 
