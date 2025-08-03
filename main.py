@@ -6,7 +6,7 @@ from app import crud, models, schemas
 from app.database import engine, get_db
 
 # Criar tabelas no banco de dados
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 # Criar aplicação FastAPI
 app = FastAPI(
